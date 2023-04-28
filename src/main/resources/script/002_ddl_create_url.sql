@@ -1,0 +1,6 @@
+CREATE TABLE IF NOT EXISTS url
+(
+    longUrl  VARCHAR NOT NULL,
+    shortUrl VARCHAR NOT NULL,
+    counter  INT DEFAULT 0
+)
