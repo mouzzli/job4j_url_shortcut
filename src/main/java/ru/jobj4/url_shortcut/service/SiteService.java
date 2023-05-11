@@ -5,4 +5,5 @@ import ru.jobj4.url_shortcut.model.Site;
 
 public interface SiteService {
     SiteDto registration(Site site);
+
 }

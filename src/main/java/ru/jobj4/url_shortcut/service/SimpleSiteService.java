@@ -7,8 +7,7 @@ import ru.jobj4.url_shortcut.dto.SiteDto;
 import ru.jobj4.url_shortcut.model.Site;
 import ru.jobj4.url_shortcut.repository.SiteRepository;
 
-import java.security.SecureRandom;
-import java.util.Base64;
+import static ru.jobj4.url_shortcut.util.RandomString.randomString;
 
 @Service
 @AllArgsConstructor
@@ -25,11 +24,4 @@ public class SimpleSiteService implements SiteService {
         return new SiteDto(true, site.getLogin(), password);
     }
 
-    private String randomString() {
-        int stringLength = 12;
-        SecureRandom random = new SecureRandom();
-        byte[] bytes = new byte[stringLength];
-        random.nextBytes(bytes);
-        return Base64.getEncoder().encodeToString(bytes);
-    }
 }

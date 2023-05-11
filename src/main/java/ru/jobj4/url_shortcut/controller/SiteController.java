@@ -12,7 +12,7 @@ import ru.jobj4.url_shortcut.service.SiteService;
 
 import javax.validation.Valid;
 
-@RestController()
+@RestController
 @RequestMapping("/site")
 @AllArgsConstructor
 public class SiteController {

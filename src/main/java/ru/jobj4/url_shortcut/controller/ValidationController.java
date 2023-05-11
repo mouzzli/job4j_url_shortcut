@@ -26,4 +26,5 @@ public class ValidationController {
                         .collect(Collectors.toList())
         );
     }
+
 }
