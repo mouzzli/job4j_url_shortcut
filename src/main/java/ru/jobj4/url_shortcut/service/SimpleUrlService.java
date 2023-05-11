@@ -2,9 +2,12 @@ package ru.jobj4.url_shortcut.service;
 
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import ru.jobj4.url_shortcut.dto.CodeDto;
 import ru.jobj4.url_shortcut.model.Url;
 import ru.jobj4.url_shortcut.repository.UrlRepository;
+
+import java.util.Optional;
 
 import static ru.jobj4.url_shortcut.util.RandomString.randomString;
 
@@ -18,5 +21,13 @@ public class SimpleUrlService implements UrlService {
     public CodeDto convert(Url url) {
         url.setCode(randomString());
         return new CodeDto(urlRepository.save(url));
+    }
+
+    @Override
+    @Transactional
+    public Optional<Url> findByCode(String code) {
+        var url = urlRepository.findByCode(code);
+        url.ifPresent(url1 -> urlRepository.incrementCount(url1.getId()));
+        return url;
     }
 }

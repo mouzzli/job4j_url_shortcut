@@ -24,4 +24,5 @@ public class Url {
     @Name("short_url")
     private String code;
 
+    private int counter;
 }
