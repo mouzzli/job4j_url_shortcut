@@ -1,6 +1,7 @@
 package ru.jobj4.url_shortcut.controller;
 
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -13,10 +14,14 @@ import ru.jobj4.url_shortcut.model.Url;
 import ru.jobj4.url_shortcut.service.UrlService;
 
 import javax.validation.Valid;
+import java.net.MalformedURLException;
 import java.net.URI;
 import java.util.List;
+import java.util.Map;
+import java.util.NoSuchElementException;
 
 @RestController
+@Slf4j
 @AllArgsConstructor
 public class UrlController {
 
@@ -26,7 +31,7 @@ public class UrlController {
     public ResponseEntity<CodeDto> convert(@Valid @RequestBody Url url) {
         try {
             return new ResponseEntity<>(urlService.convert(url), HttpStatus.OK);
-        } catch (DataIntegrityViolationException e) {
+        } catch (DataIntegrityViolationException | MalformedURLException e) {
             throw new ResponseStatusException(HttpStatus.CONFLICT, String.format("url %s already exist", url.getUrl()));
         }
     }
@@ -43,5 +48,23 @@ public class UrlController {
         return ResponseEntity.status(HttpStatus.OK)
                 .contentType(MediaType.APPLICATION_JSON)
                 .body(body);
+    }
+
+    @ExceptionHandler(NoSuchElementException.class)
+    private ResponseEntity<?> handle(NoSuchElementException e) {
+        String body = e.getMessage();
+        log.error(body);
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                .contentType(MediaType.APPLICATION_JSON)
+                .body(Map.of("message", e.getMessage()));
+    }
+
+    @ExceptionHandler(IllegalArgumentException.class)
+    private ResponseEntity<?> handle(IllegalArgumentException e) {
+        String body = e.getMessage();
+        log.error(body);
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                .contentType(MediaType.APPLICATION_JSON)
+                .body(Map.of("message", e.getMessage()));
     }
 }
