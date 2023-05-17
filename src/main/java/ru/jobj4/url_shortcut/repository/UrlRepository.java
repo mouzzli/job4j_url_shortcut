@@ -18,4 +18,6 @@ public interface UrlRepository extends CrudRepository<Url, Integer> {
     void incrementCount( int id);
 
     List<Url> findAll();
+
+    Optional<Url> findByUrl(String url);
 }

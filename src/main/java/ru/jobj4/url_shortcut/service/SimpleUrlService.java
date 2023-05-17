@@ -62,4 +62,9 @@ public class SimpleUrlService implements UrlService {
                 .map(UrlDto::new)
                 .collect(Collectors.toList());
     }
+
+    @Override
+    public Optional<Url> findByUrl(String url) {
+        return urlRepository.findByUrl(url);
+    }
 }

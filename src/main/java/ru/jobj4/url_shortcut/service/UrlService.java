@@ -15,4 +15,6 @@ public interface UrlService {
     Optional<Url> findByCode(String code);
 
     List<UrlDto> findAll();
+
+    Optional<Url> findByUrl(String url);
 }
