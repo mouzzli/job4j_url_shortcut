@@ -1,6 +1,6 @@
 CREATE TABLE IF NOT EXISTS site
 (
-    id       SERIAL PRIMARY KEY,
+    id       SERIAL PRIMARY KEY UNIQUE ,
     login    VARCHAR NOT NULL,
     password VARCHAR NOT NULL,
     site     VARCHAR NOT NULL UNIQUE

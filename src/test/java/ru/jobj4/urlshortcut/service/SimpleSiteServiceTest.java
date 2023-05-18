@@ -4,15 +4,16 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.web.server.ResponseStatusException;
 import ru.jobj4.urlshortcut.UrlShortcutApplication;
+import ru.jobj4.urlshortcut.configuration.TestConfig;
 import ru.jobj4.urlshortcut.model.Site;
 import ru.jobj4.urlshortcut.repository.SiteRepository;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
-@SpringBootTest(classes = UrlShortcutApplication.class)
+@SpringBootTest(classes = {UrlShortcutApplication.class, TestConfig.class})
 class SimpleSiteServiceTest {
 
     @Autowired
@@ -45,6 +46,7 @@ class SimpleSiteServiceTest {
         site2.setSite("https://www.test.com");
         siteService.registration(site);
         assertThatThrownBy(() -> siteService.registration(site2))
-                .isInstanceOf(DataIntegrityViolationException.class);
+                .isInstanceOf(ResponseStatusException.class)
+                .hasMessageContaining(String.format("site %s already exist", site.getSite()));
     }
 }

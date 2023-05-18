@@ -4,8 +4,10 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.jdbc.Sql;
+import org.springframework.web.server.ResponseStatusException;
 import ru.jobj4.urlshortcut.UrlShortcutApplication;
 import ru.jobj4.urlshortcut.dto.UrlDto;
 import ru.jobj4.urlshortcut.model.Url;
@@ -60,12 +62,25 @@ class SimpleUrlServiceTest {
 
     @Test
     @WithMockUser(username = "user")
-    public void whenConvertWithUSerNotFound() {
+    public void whenConvertWithUserNotFound() {
         Url url = new Url();
         url.setUrl("https://www.example.com/test");
         assertThatThrownBy(() -> urlService.convert(url))
                 .isInstanceOf(NoSuchElementException.class)
                 .hasMessageContaining("no such user with this login");
+    }
+
+    @Test
+    @WithMockUser(username = "test_user")
+    @Sql(scripts = "/scripts/dml_insert_site.sql")
+    @Sql(scripts = "/scripts/dml_insert_new_url.sql")
+    public void whenConvertWithUrlAlreadyExist() {
+        Url url = new Url();
+        url.setUrl("https://www.example.com");
+        assertThatThrownBy(() -> urlService.convert(url))
+                .isInstanceOf(ResponseStatusException.class)
+                .hasMessageContaining(String.format("url %s already exist", url.getUrl()))
+                .satisfies(e -> assertThat(((ResponseStatusException) e).getStatus()).isEqualTo(HttpStatus.CONFLICT));
     }
 
     @Test

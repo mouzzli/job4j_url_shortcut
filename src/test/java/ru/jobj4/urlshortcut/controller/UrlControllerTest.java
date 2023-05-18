@@ -6,10 +6,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.web.server.ResponseStatusException;
 import ru.jobj4.urlshortcut.UrlShortcutApplication;
 import ru.jobj4.urlshortcut.dto.CodeDto;
 import ru.jobj4.urlshortcut.dto.UrlDto;
@@ -59,7 +60,7 @@ class UrlControllerTest {
     public void whenConvertedFailed() throws Exception {
         Url url = new Url();
         url.setUrl("https:/www.test.com");
-        when(urlService.convert(url)).thenThrow(new DataIntegrityViolationException(""));
+        when(urlService.convert(url)).thenThrow(new ResponseStatusException(HttpStatus.CONFLICT, "url does not belong to the registered site: https:/www.test.com"));
 
         this.mockMvc.perform(post("/convert")
                         .contentType(MediaType.APPLICATION_JSON)

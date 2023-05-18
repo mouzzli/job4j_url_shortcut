@@ -8,20 +8,21 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import ru.jobj4.urlshortcut.filter.JWTAuthenticationFilter;
 import ru.jobj4.urlshortcut.filter.JWTAuthorizationFilter;
-import ru.jobj4.urlshortcut.service.UserDetailsServiceImpl;
 
 import static ru.jobj4.urlshortcut.filter.JWTAuthenticationFilter.SIGN_UP_URL;
 
 @EnableWebSecurity
 @AllArgsConstructor
 public class WebSecurity extends WebSecurityConfigurerAdapter {
-    private UserDetailsServiceImpl userDetailsService;
+    private UserDetailsService userDetailsService;
+
     private BCryptPasswordEncoder bCryptPasswordEncoder;
 
     private static final String REDIRECT = "/redirect/";

@@ -2,7 +2,6 @@ package ru.jobj4.urlshortcut.controller;
 
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -28,12 +27,8 @@ public class UrlController {
     private UrlService urlService;
 
     @PostMapping("/convert")
-    public ResponseEntity<CodeDto> convert(@Valid @RequestBody Url url) {
-        try {
+    public ResponseEntity<CodeDto> convert(@Valid @RequestBody Url url) throws MalformedURLException {
             return new ResponseEntity<>(urlService.convert(url), HttpStatus.OK);
-        } catch (DataIntegrityViolationException | MalformedURLException e) {
-            throw new ResponseStatusException(HttpStatus.CONFLICT, String.format("url %s already exist", url.getUrl()));
-        }
     }
 
     @GetMapping("/redirect/{code}")
